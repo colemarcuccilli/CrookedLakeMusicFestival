@@ -1,15 +1,21 @@
 'use client';
 
 import { useState } from 'react';
-import { Heart, Shield, Guitar, Tent, Truck, Megaphone, Lock } from 'lucide-react';
+import { Heart, Shield, Guitar, Tent, Truck, Megaphone, Lock, Facebook, Instagram, CheckCircle } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import Button from '@/components/ui/Button';
-import { donationTiers, fundAllocations, taxInfo } from '@/data/donations';
+import Input from '@/components/ui/Input';
+import Turnstile from '@/components/ui/Turnstile';
+import TikTokIcon from '@/components/icons/TikTokIcon';
+import { donationTiers, fundAllocations, SWIPESIMPLE_LINKS, SWIPESIMPLE_ANY_AMOUNT } from '@/data/donations';
+import { SITE_CONFIG } from '@/lib/constants';
 import { cn } from '@/lib/utils';
 import type { DonationTier } from '@/types';
 
 const iconMap: Record<string, React.ElementType> = { Guitar, Shield, Tent, Truck, Megaphone };
+
+const inquiryTypes = ['Volunteer', 'Sponsor', 'General Inquiry'];
 
 export default function DonatePage() {
   const [selectedTier, setSelectedTier] = useState<DonationTier | null>(donationTiers[1]);
@@ -17,9 +23,30 @@ export default function DonatePage() {
   const [isCustom, setIsCustom] = useState(false);
   const activeAmount = isCustom ? Number(customAmount) || 0 : selectedTier?.amount || 0;
 
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [formLoading, setFormLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
+
   const handleDonate = () => {
     if (activeAmount < 5) return;
-    window.open(`#donate-${activeAmount}`, '_blank');
+    const paymentUrl = SWIPESIMPLE_LINKS[activeAmount] || SWIPESIMPLE_ANY_AMOUNT;
+    window.open(paymentUrl, '_blank');
+  };
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!turnstileToken) return;
+    setFormLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      const GOOGLE_SCRIPT_URL = SITE_CONFIG.googleSheetsUrl;
+      if (GOOGLE_SCRIPT_URL) {
+        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, turnstileToken, type: 'donate-inquiry', timestamp: new Date().toISOString() }) });
+      }
+      setFormSubmitted(true);
+    } catch { alert('Something went wrong. Please try again.'); }
+    finally { setFormLoading(false); }
   };
 
   return (
@@ -101,17 +128,52 @@ export default function DonatePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto mt-8">
             <ScrollReveal animation="fadeUp" delay={0}><div className="bg-white rounded-2xl p-6 shadow-soft text-center hover:shadow-elevated transition-all hover:-translate-y-1"><h3 className="font-display font-bold text-lake-950 mb-2">Volunteer</h3><p className="text-sm text-sand-800/70 mb-4">Donate your time</p><Button href="/volunteer" variant="ghost" size="sm">Sign Up</Button></div></ScrollReveal>
             <ScrollReveal animation="fadeUp" delay={0.1}><div className="bg-white rounded-2xl p-6 shadow-soft text-center hover:shadow-elevated transition-all hover:-translate-y-1"><h3 className="font-display font-bold text-lake-950 mb-2">Sponsor</h3><p className="text-sm text-sand-800/70 mb-4">Business partnerships</p><Button href="/sponsors" variant="ghost" size="sm">Learn More</Button></div></ScrollReveal>
-            <ScrollReveal animation="fadeUp" delay={0.2}><div className="bg-white rounded-2xl p-6 shadow-soft text-center hover:shadow-elevated transition-all hover:-translate-y-1"><h3 className="font-display font-bold text-lake-950 mb-2">Spread the Word</h3><p className="text-sm text-sand-800/70 mb-4">Share on social media</p><div className="flex justify-center gap-2"><span className="px-3 py-1 bg-lake-50 rounded-full text-xs font-semibold text-lake">Facebook</span><span className="px-3 py-1 bg-lake-50 rounded-full text-xs font-semibold text-lake">Instagram</span></div></div></ScrollReveal>
+            <ScrollReveal animation="fadeUp" delay={0.2}>
+              <div className="bg-white rounded-2xl p-6 shadow-soft text-center hover:shadow-elevated transition-all hover:-translate-y-1">
+                <h3 className="font-display font-bold text-lake-950 mb-2">Spread the Word</h3>
+                <p className="text-sm text-sand-800/70 mb-4">Share on social media</p>
+                <div className="flex justify-center gap-2">
+                  <a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-lake/10 hover:bg-lake hover:text-white flex items-center justify-center transition-all text-lake" aria-label="Facebook"><Facebook size={16} /></a>
+                  <a href={SITE_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-lake/10 hover:bg-lake hover:text-white flex items-center justify-center transition-all text-lake" aria-label="Instagram"><Instagram size={16} /></a>
+                  <a href={SITE_CONFIG.social.tiktok} target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-full bg-lake/10 hover:bg-lake hover:text-white flex items-center justify-center transition-all text-lake" aria-label="TikTok"><TikTokIcon size={16} /></a>
+                </div>
+              </div>
+            </ScrollReveal>
           </div>
         </section>
 
         <section className="py-16">
-          <ScrollReveal animation="fadeUp">
-            <div className="bg-lake-50 rounded-2xl p-8 text-center max-w-2xl mx-auto">
-              <p className="text-sand-800/70 text-sm leading-relaxed">{taxInfo.organizationType} non-profit. Your donation may be tax-deductible. EIN: {taxInfo.ein}</p>
-              <p className="text-sand-800/50 text-xs mt-3">Questions? <a href="/contact" className="text-lake hover:underline">Contact us</a></p>
-            </div>
-          </ScrollReveal>
+          <SectionHeading title="GET IN TOUCH" subtitle="Questions about donating, sponsoring, or volunteering?" />
+          <div className="max-w-2xl mx-auto mt-8">
+            <ScrollReveal animation="fadeUp">
+              {formSubmitted ? (
+                <div className="bg-lake-50 rounded-3xl p-12 text-center">
+                  <CheckCircle size={48} className="text-lake mx-auto mb-4" />
+                  <h3 className="font-display text-2xl font-bold text-lake-950 mb-2">Message Sent!</h3>
+                  <p className="text-sand-800/70">We&apos;ll get back to you soon.</p>
+                </div>
+              ) : (
+                <form onSubmit={handleFormSubmit} className="bg-white rounded-3xl p-8 shadow-soft space-y-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <Input label="Name" name="name" id="donateName" required placeholder="Your name" />
+                    <Input label="Email" name="email" id="donateEmail" type="email" required placeholder="you@example.com" />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label htmlFor="inquiryType" className="block text-sm font-semibold text-lake-950">I&apos;m interested in...</label>
+                    <select name="inquiryType" id="inquiryType" className="w-full px-4 py-3 rounded-xl border-2 border-lake-100 bg-white text-lake-950 focus:outline-none focus:border-lake focus:ring-2 focus:ring-lake/20 transition-all">
+                      {inquiryTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+                    </select>
+                  </div>
+                  <div className="space-y-1.5">
+                    <label htmlFor="donateMessage" className="block text-sm font-semibold text-lake-950">Message</label>
+                    <textarea name="message" id="donateMessage" rows={4} required placeholder="How can we help?" className="w-full px-4 py-3 rounded-xl border-2 border-lake-100 bg-white text-lake-950 placeholder:text-sand-800/40 focus:outline-none focus:border-lake focus:ring-2 focus:ring-lake/20 transition-all resize-none" />
+                  </div>
+                  <Turnstile onVerify={setTurnstileToken} />
+                  <Button type="submit" size="lg" className="w-full justify-center" loading={formLoading} disabled={!turnstileToken}>Send Message</Button>
+                </form>
+              )}
+            </ScrollReveal>
+          </div>
         </section>
       </div>
     </div>

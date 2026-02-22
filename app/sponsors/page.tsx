@@ -2,13 +2,13 @@ import { sponsors } from '@/data/sponsors';
 import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import Button from '@/components/ui/Button';
-import { cn } from '@/lib/utils';
+import { cn, assetPath } from '@/lib/utils';
 
 const tierConfig = {
   title: { heading: 'Title Sponsors', cols: 'grid-cols-1 sm:grid-cols-2', size: 'h-32' },
-  gold: { heading: 'Gold Sponsors', cols: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5', size: 'h-24' },
-  silver: { heading: 'Silver Sponsors', cols: 'grid-cols-3 sm:grid-cols-4 lg:grid-cols-6', size: 'h-20' },
-  community: { heading: 'Community Partners', cols: 'grid-cols-3 sm:grid-cols-4 lg:grid-cols-6', size: 'h-16' },
+  gold: { heading: 'Gold Sponsors', cols: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4', size: 'h-28' },
+  silver: { heading: 'Silver Sponsors', cols: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5', size: 'h-24' },
+  community: { heading: 'Community Partners', cols: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4', size: 'h-20' },
 };
 
 export default function SponsorsPage() {
@@ -25,11 +25,11 @@ export default function SponsorsPage() {
           return (
             <section key={tier} className="mb-16">
               <h3 className="font-display text-xl font-bold text-lake-950 text-center mb-8">{config.heading}</h3>
-              <div className={cn('grid gap-6 max-w-4xl mx-auto', config.cols)}>
+              <div className={cn('grid gap-6 max-w-5xl mx-auto', config.cols)}>
                 {tierSponsors.map((sponsor, i) => (
                   <ScrollReveal key={sponsor.id} animation="fadeUp" delay={i * 0.1}>
-                    <a href={sponsor.website} target="_blank" rel="noopener noreferrer" className={cn('flex items-center justify-center rounded-2xl bg-lake-50 grayscale hover:grayscale-0 hover:shadow-soft transition-all duration-300', config.size)}>
-                      <span className="font-display font-bold text-lake-950/40 hover:text-lake-950 transition-colors">{sponsor.name}</span>
+                    <a href={sponsor.website} target="_blank" rel="noopener noreferrer" className={cn('flex items-center justify-center rounded-2xl bg-white p-4 shadow-soft hover:shadow-elevated transition-all duration-300 hover:-translate-y-1', config.size)}>
+                      <img src={assetPath(sponsor.logo)} alt={sponsor.name} className="max-h-full max-w-full object-contain" />
                     </a>
                   </ScrollReveal>
                 ))}

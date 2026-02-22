@@ -6,17 +6,18 @@ export const SITE_CONFIG = {
   dates: 'July 24-25, 2026',
   location: 'The Sandbar, Crooked Lake, Angola, Indiana',
   eventDate: new Date('2026-07-24T12:00:00'),
-  email: 'info@crookedlakesandbarmusicfest.com',
+  email: 'sandbarmusicfest@gmail.com',
   social: {
-    facebook: 'https://facebook.com/crookedlakesandbarmusicfest',
-    instagram: 'https://instagram.com/crookedlakesandbarmusicfest',
+    facebook: 'https://www.facebook.com/sandbarmusicfest/',
+    instagram: 'https://www.instagram.com/sandbarmusicfest/',
+    tiktok: 'https://www.tiktok.com/@sandbar.music.fes',
   },
   googleSheetsUrl: '',
+  turnstileSiteKey: '0x4AAAAAACVZNsLhghW6IWbg',
 };
 
 export const NAV_LINKS = [
   { label: 'Home', href: '/' },
-  { label: 'Lineup', href: '/lineup' },
   { label: 'Schedule', href: '/schedule' },
   { label: 'Venue', href: '/venue' },
   { label: 'Donate', href: '/donate' },

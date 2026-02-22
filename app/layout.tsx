@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import { fontDisplay, fontBody, fontMono, fontAnton } from '@/lib/fonts';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
@@ -39,6 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fontDisplay.variable} ${fontBody.variable} ${fontMono.variable} ${fontAnton.variable}`}>
       <body className="font-body antialiased">
+        <Script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer strategy="lazyOnload" />
         <SmoothScroll>
           <Navigation />
           <main>{children}</main>

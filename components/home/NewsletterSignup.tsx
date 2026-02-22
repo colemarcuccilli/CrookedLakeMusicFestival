@@ -3,23 +3,26 @@
 import { useState } from 'react';
 import { Send, Check } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import Turnstile from '@/components/ui/Turnstile';
+import { SITE_CONFIG } from '@/lib/constants';
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email || !turnstileToken) return;
     setStatus('loading');
     try {
-      const GOOGLE_SCRIPT_URL = '';
+      const GOOGLE_SCRIPT_URL = SITE_CONFIG.googleSheetsUrl;
       if (GOOGLE_SCRIPT_URL) {
         await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
           mode: 'no-cors',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, type: 'newsletter', timestamp: new Date().toISOString() }),
+          body: JSON.stringify({ email, turnstileToken, type: 'newsletter', timestamp: new Date().toISOString() }),
         });
       }
       setStatus('success');
@@ -46,11 +49,16 @@ export default function NewsletterSignup() {
               <span className="text-white font-semibold">You&apos;re on the list! See you at the sandbar.</span>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
-              <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" required className="flex-1 px-6 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all" />
-              <button type="submit" disabled={status === 'loading'} className="px-8 py-4 rounded-full bg-white text-lake-950 font-display font-bold hover:bg-white/90 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50">
-                {status === 'loading' ? <span className="animate-spin">&#x27F3;</span> : <><span>Subscribe</span><Send size={16} /></>}
-              </button>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" required className="flex-1 px-6 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-white/40 focus:outline-none focus:border-white/40 focus:ring-2 focus:ring-white/10 transition-all" />
+                <button type="submit" disabled={status === 'loading' || !turnstileToken} className="px-8 py-4 rounded-full bg-white text-lake-950 font-display font-bold hover:bg-white/90 transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-50">
+                  {status === 'loading' ? <span className="animate-spin">&#x27F3;</span> : <><span>Subscribe</span><Send size={16} /></>}
+                </button>
+              </div>
+              <div className="flex justify-center">
+                <Turnstile onVerify={setTurnstileToken} />
+              </div>
             </form>
           )}
           {status === 'error' && <p className="text-pink-300 mt-4 text-sm">Something went wrong. Please try again.</p>}

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X, ChevronDown, Heart } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn, assetPath } from '@/lib/utils';
 import { mainNavLinks, moreNavLinks } from '@/data/navigation';
 import MobileMenu from './MobileMenu';
 
@@ -24,7 +24,7 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center gap-2">
-              <img src="/images/CrookedLakeSandbarMusicFestLogoNoShadow.png" alt="Crooked Lake Sandbar Music Festival" className={cn('transition-all duration-300', isScrolled ? 'h-10' : 'h-12')} />
+              <img src={assetPath('/images/CrookedLakeSandbarMusicFestLogoNoShadow.png')} alt="Crooked Lake Sandbar Music Festival" className={cn('transition-all duration-300', isScrolled ? 'h-10' : 'h-12')} />
             </Link>
 
             <div className="hidden lg:flex items-center gap-1">

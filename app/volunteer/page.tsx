@@ -6,6 +6,8 @@ import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import Turnstile from '@/components/ui/Turnstile';
+import { SITE_CONFIG } from '@/lib/constants';
 
 const benefits = [
   { icon: Heart, title: 'Free Festival Access', desc: 'Enjoy the festival on your off-shift time' },
@@ -19,16 +21,18 @@ const roles = ['Gate & Tickets', 'Parking & Boat Launch', 'Setup & Teardown', 'I
 export default function VolunteerPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
     try {
-      const GOOGLE_SCRIPT_URL = '';
+      const GOOGLE_SCRIPT_URL = SITE_CONFIG.googleSheetsUrl;
       if (GOOGLE_SCRIPT_URL) {
-        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, type: 'volunteer', timestamp: new Date().toISOString() }) });
+        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, turnstileToken, type: 'volunteer', timestamp: new Date().toISOString() }) });
       }
       setSubmitted(true);
     } catch { alert('Something went wrong. Please try again.'); }
@@ -92,7 +96,8 @@ export default function VolunteerPage() {
                   <label htmlFor="notes" className="block text-sm font-semibold text-lake-950">Experience / Notes</label>
                   <textarea name="notes" id="notes" rows={4} placeholder="Any relevant experience..." className="w-full px-4 py-3 rounded-xl border-2 border-lake-100 bg-white text-lake-950 placeholder:text-sand-800/40 focus:outline-none focus:border-lake focus:ring-2 focus:ring-lake/20 transition-all resize-none" />
                 </div>
-                <Button type="submit" size="lg" className="w-full justify-center" loading={loading}>Submit Application</Button>
+                <Turnstile onVerify={setTurnstileToken} />
+                <Button type="submit" size="lg" className="w-full justify-center" loading={loading} disabled={!turnstileToken}>Submit Application</Button>
               </form>
             )}
           </ScrollReveal>

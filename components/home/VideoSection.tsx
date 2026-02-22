@@ -1,12 +1,8 @@
-'use client';
-
-import { useState } from 'react';
-import { Play } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import Button from '@/components/ui/Button';
+import { Images } from 'lucide-react';
 
 export default function VideoSection() {
-  const [isPlaying, setIsPlaying] = useState(false);
-
   return (
     <section className="relative py-24 bg-lake-950 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-lake-950 via-lake-900 to-lake-950 opacity-50" />
@@ -14,23 +10,23 @@ export default function VideoSection() {
         <ScrollReveal animation="fadeUp">
           <div className="text-center mb-12">
             <h2 className="font-display text-4xl md:text-5xl font-bold text-white mb-4">Experience the Sandbar</h2>
-            <p className="text-white/60 text-lg">See what makes our festival unlike any other</p>
+            <p className="text-white/60 text-lg">See what makes our festival like no other</p>
           </div>
           <div className="relative aspect-video rounded-3xl overflow-hidden bg-lake-900 shadow-elevated">
-            {!isPlaying ? (
-              <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-lake-800 to-lake-950">
-                <div className="text-center">
-                  <button onClick={() => setIsPlaying(true)} className="group w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:bg-white/20 hover:shadow-glow-md">
-                    <Play size={40} className="text-white ml-1 group-hover:scale-110 transition-transform" />
-                  </button>
-                  <p className="text-white/50 mt-4 text-sm">Watch Highlight Reel</p>
-                </div>
-              </div>
-            ) : (
-              <div className="w-full h-full flex items-center justify-center bg-black">
-                <p className="text-white/50">Video player placeholder - Add YouTube/Vimeo embed URL</p>
-              </div>
-            )}
+            <iframe
+              src="https://customer-w6h9o08eg118alny.cloudflarestream.com/9e6cbe7feb4aced957fb4fe43c8e9f16/iframe"
+              className="w-full h-full"
+              allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+              allowFullScreen
+            />
+            <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-lg bg-black/60 backdrop-blur-sm border border-white/10">
+              <span className="text-white/80 text-sm font-semibold">2025 Recap</span>
+            </div>
+          </div>
+          <div className="text-center mt-10">
+            <Button href="/gallery" variant="secondary" size="lg" className="border-white/30 text-white hover:bg-white/10 hover:text-white">
+              <Images size={20} className="mr-2" /> View All Media
+            </Button>
           </div>
         </ScrollReveal>
       </div>

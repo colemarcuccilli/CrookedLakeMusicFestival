@@ -1,55 +1,77 @@
 'use client';
 
 import { useState } from 'react';
-import { galleryImages } from '@/data/gallery';
+import { galleryItems } from '@/data/gallery';
 import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/ui/ScrollReveal';
-import { X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { X, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import type { GalleryItem } from '@/types';
+import { assetPath } from '@/lib/utils';
 
-type YearFilter = 'all' | number;
+const STREAM_BASE = 'https://customer-w6h9o08eg118alny.cloudflarestream.com';
 
 export default function GalleryPage() {
-  const [yearFilter, setYearFilter] = useState<YearFilter>('all');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const years = Array.from(new Set(galleryImages.map((img) => img.year))).sort((a, b) => b - a);
-  const filtered = galleryImages.filter((img) => yearFilter === 'all' || img.year === yearFilter);
+  const currentItem: GalleryItem | null = lightboxIndex !== null ? galleryItems[lightboxIndex] : null;
 
   return (
     <div className="pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeading title="GALLERY" subtitle="Memories from past festivals" />
-        <div className="flex justify-center gap-2 mb-12">
-          <button onClick={() => setYearFilter('all')} className={cn('px-5 py-2 rounded-full text-sm font-semibold transition-all', yearFilter === 'all' ? 'bg-lake text-white' : 'bg-lake-50 text-lake-950 hover:bg-lake-100')}>All Years</button>
-          {years.map((year) => (
-            <button key={year} onClick={() => setYearFilter(year)} className={cn('px-5 py-2 rounded-full text-sm font-semibold transition-all', yearFilter === year ? 'bg-lake text-white' : 'bg-lake-50 text-lake-950 hover:bg-lake-100')}>{year}</button>
-          ))}
-        </div>
         <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-          {filtered.map((img, i) => (
-            <ScrollReveal key={img.id} animation="fadeUp" delay={i * 0.05}>
+          {galleryItems.map((item, i) => (
+            <ScrollReveal key={item.id} animation="fadeUp" delay={(i % 12) * 0.05}>
               <button onClick={() => setLightboxIndex(i)} className="w-full group relative rounded-2xl overflow-hidden bg-lake-100 break-inside-avoid block">
-                <div className="w-full bg-gradient-to-br from-lake-200 to-lake-300 transition-transform duration-500 group-hover:scale-105" style={{ aspectRatio: `${img.width}/${img.height}` }}>
-                  <div className="absolute inset-0 flex items-center justify-center text-lake/30 font-display text-sm">{img.alt}</div>
-                </div>
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                {item.type === 'video' ? (
+                  <div className="w-full bg-gradient-to-br from-lake-800 to-lake-950 transition-transform duration-500 group-hover:scale-105" style={{ aspectRatio: '16/9' }}>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center">
+                      <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-3 group-hover:bg-white/30 transition-colors">
+                        <Play size={28} className="text-white ml-1" fill="white" />
+                      </div>
+                      <p className="text-white/80 text-sm font-semibold">{item.alt}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <img
+                      src={assetPath(item.src!)}
+                      alt={item.alt}
+                      className="w-full h-auto transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors" />
+                  </>
+                )}
               </button>
             </ScrollReveal>
           ))}
         </div>
-        {filtered.length === 0 && <p className="text-center text-sand-800/50 py-12">No photos for this year yet.</p>}
       </div>
 
-      {lightboxIndex !== null && (
+      {lightboxIndex !== null && currentItem && (
         <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center" onClick={() => setLightboxIndex(null)}>
-          <button onClick={() => setLightboxIndex(null)} className="absolute top-4 right-4 text-white/70 hover:text-white p-2"><X size={32} /></button>
-          <button onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + filtered.length) % filtered.length); }} className="absolute left-4 text-white/70 hover:text-white p-2"><ChevronLeft size={40} /></button>
-          <button onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % filtered.length); }} className="absolute right-4 text-white/70 hover:text-white p-2"><ChevronRight size={40} /></button>
-          <div className="max-w-4xl max-h-[80vh] mx-4" onClick={(e) => e.stopPropagation()}>
-            <div className="bg-gradient-to-br from-lake-800 to-lake-950 rounded-2xl flex items-center justify-center p-12 min-h-[300px]">
-              <p className="text-white/50 font-display">{filtered[lightboxIndex].alt}</p>
-            </div>
+          <button onClick={() => setLightboxIndex(null)} className="absolute top-4 right-4 text-white/70 hover:text-white p-2 z-10"><X size={32} /></button>
+          <button onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + galleryItems.length) % galleryItems.length); }} className="absolute left-4 text-white/70 hover:text-white p-2 z-10"><ChevronLeft size={40} /></button>
+          <button onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % galleryItems.length); }} className="absolute right-4 text-white/70 hover:text-white p-2 z-10"><ChevronRight size={40} /></button>
+          <div className="max-w-5xl w-full max-h-[85vh] mx-4" onClick={(e) => e.stopPropagation()}>
+            {currentItem.type === 'video' ? (
+              <div className="aspect-video rounded-2xl overflow-hidden">
+                <iframe
+                  src={`${STREAM_BASE}/${currentItem.videoId}/iframe`}
+                  className="w-full h-full"
+                  allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            ) : (
+              <img
+                src={assetPath(currentItem.src!)}
+                alt={currentItem.alt}
+                className="max-w-full max-h-[85vh] mx-auto rounded-2xl object-contain"
+              />
+            )}
           </div>
         </div>
       )}

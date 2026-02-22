@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
+const basePath = process.env.GITHUB_ACTIONS ? '/CrookedLakeMusicFestival' : '';
+
 const nextConfig = {
   output: 'export',
-  basePath: process.env.GITHUB_ACTIONS ? '/CrookedLakeMusicFestival' : '',
+  basePath,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
   images: {
     unoptimized: true,
   },

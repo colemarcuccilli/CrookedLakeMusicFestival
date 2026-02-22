@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import { Facebook, Instagram, Mail } from 'lucide-react';
+import TikTokIcon from '@/components/icons/TikTokIcon';
 import { SITE_CONFIG } from '@/lib/constants';
 
 const footerLinks = [
-  { label: 'Lineup', href: '/lineup' },
   { label: 'Schedule', href: '/schedule' },
   { label: 'Venue', href: '/venue' },
   { label: 'Donate', href: '/donate' },
@@ -36,6 +36,7 @@ export default function Footer() {
             <div className="flex gap-3 mb-6">
               <a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Facebook"><Facebook size={18} /></a>
               <a href={SITE_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Instagram"><Instagram size={18} /></a>
+              <a href={SITE_CONFIG.social.tiktok} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="TikTok"><TikTokIcon size={18} /></a>
               <a href={`mailto:${SITE_CONFIG.email}`} className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors" aria-label="Email"><Mail size={18} /></a>
             </div>
             <p className="text-white/40 text-sm">{SITE_CONFIG.email}</p>

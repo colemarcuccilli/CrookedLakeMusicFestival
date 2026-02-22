@@ -1,13 +1,11 @@
-import { MapPin, Car, Anchor, Sun, Droplets, Music, ShieldCheck, UtensilsCrossed } from 'lucide-react';
+import { MapPin, Car, Anchor, Sun, Droplets, ShieldCheck } from 'lucide-react';
 import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 const venueHighlights = [
   { icon: Anchor, title: 'Boat Access', desc: 'Boat directly to the sandbar from any Crooked Lake launch' },
-  { icon: Music, title: 'Two Stages', desc: 'Main Stage and Sandbar Stage running all weekend' },
   { icon: Sun, title: 'Sun & Sand', desc: 'Natural sandbar setting with shallow water perfect for wading' },
   { icon: ShieldCheck, title: 'Safety First', desc: 'On-water safety patrol and first aid on site' },
-  { icon: UtensilsCrossed, title: 'Food & Drinks', desc: 'Food vendors and refreshments available on the sandbar' },
   { icon: Droplets, title: 'Lake Life', desc: 'Swim, float, and enjoy the water between sets' },
 ];
 
@@ -32,19 +30,20 @@ export default function VenuePage() {
         <section className="py-16">
           <ScrollReveal animation="fadeUp">
             <div className="relative aspect-[16/9] rounded-3xl overflow-hidden bg-gradient-to-br from-lake-100 to-lake-200 shadow-soft">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-lake-700">
-                  <MapPin size={64} className="mx-auto mb-4 opacity-40" />
-                  <p className="font-display text-2xl font-bold">Interactive Map Coming Soon</p>
-                  <p className="text-sm opacity-60 mt-2">Crooked Lake Sandbar, Angola, IN</p>
-                </div>
-              </div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2465.961883041318!2d-85.0460007599389!3d41.67500778259373!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2sus!4v1769962432742!5m2!1sen!2sus"
+                className="w-full h-full"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </ScrollReveal>
         </section>
         <section className="py-16">
           <SectionHeading title="VENUE HIGHLIGHTS" subtitle="Everything you need to know about the sandbar" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mt-12">
             {venueHighlights.map((item, i) => (
               <ScrollReveal key={item.title} animation="fadeUp" delay={i * 0.1}>
                 <div className="flex gap-4 p-6 bg-white rounded-2xl shadow-soft hover:shadow-elevated transition-all duration-300 hover:-translate-y-1">
@@ -65,6 +64,21 @@ export default function VenuePage() {
               </div>
             </ScrollReveal>
           </div>
+        </section>
+        <section className="py-16">
+          <SectionHeading title="PUBLIC PARKING" subtitle="Park here and head to the lake" />
+          <ScrollReveal animation="fadeUp">
+            <div className="relative aspect-[16/9] max-w-4xl mx-auto rounded-3xl overflow-hidden bg-gradient-to-br from-lake-100 to-lake-200 shadow-soft">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d702.9893715752158!2d-85.03635195013644!3d41.666534276575376!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88162f3bca1906ed%3A0x5fea30d2b632d356!2sCrooked%20Lake%2C%20IN%2046703!5e1!3m2!1sen!2sus!4v1770865445301!5m2!1sen!2sus"
+                className="w-full h-full"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+          </ScrollReveal>
         </section>
         <section className="py-16">
           <SectionHeading title="WHERE TO STAY" subtitle="Nearby accommodations for the weekend" />

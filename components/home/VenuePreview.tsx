@@ -18,13 +18,14 @@ export default function VenuePreview() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12">
           <ScrollReveal animation="slideLeft">
             <div className="relative aspect-[4/3] rounded-3xl overflow-hidden bg-gradient-to-br from-lake-200 to-lake-300 shadow-soft">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-lake-700">
-                  <MapPin size={48} className="mx-auto mb-3 opacity-50" />
-                  <p className="font-display font-semibold">Crooked Lake</p>
-                  <p className="text-sm opacity-70">Angola, Indiana</p>
-                </div>
-              </div>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2465.961883041318!2d-85.0460007599389!3d41.67500778259373!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2sus!4v1769962432742!5m2!1sen!2sus"
+                className="w-full h-full"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
           </ScrollReveal>
           <div>

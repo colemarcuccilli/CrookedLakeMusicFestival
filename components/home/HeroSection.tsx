@@ -5,6 +5,7 @@ import { ChevronDown } from 'lucide-react';
 import Button from '@/components/ui/Button';
 import CountdownTimer from './CountdownTimer';
 import { SITE_CONFIG } from '@/lib/constants';
+import { assetPath } from '@/lib/utils';
 
 export default function HeroSection() {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -25,12 +26,12 @@ export default function HeroSection() {
 
   return (
     <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      <img src="/images/hero/HEADER.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" />
+      <img src={assetPath('/images/hero/HEADER.jpg')} alt="" className="absolute inset-0 w-full h-full object-cover" />
       <div className="absolute inset-0 bg-black/0" />
 
       <div className="hero-content relative z-10 text-center px-4 max-w-5xl mx-auto">
         <img
-          src="/images/CrookedLakeSandbarMusicFestLogoNoShadow.png"
+          src={assetPath('/images/CrookedLakeSandbarMusicFestLogoNoShadow.png')}
           alt="Crooked Lake Sandbar Music Festival"
           className="mx-auto mb-6 w-40 sm:w-48 md:w-56 lg:w-64"
         />
@@ -39,6 +40,7 @@ export default function HeroSection() {
             A Charity Music Festival
           </span>
         </div>
+        <p className="text-lg sm:text-xl text-white/70 font-display font-semibold mb-4">2026 is Coming Soon</p>
         <h1 className="font-[var(--font-anton)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl mb-4 leading-[0.9] tracking-tight" style={{ fontFamily: 'var(--font-anton)', textShadow: '0 4px 20px rgba(0,0,0,0.15)' }}>
           <span className="block text-lake whitespace-nowrap">CROOKED LAKE</span>
           <span className="block text-pink">SANDBAR</span>
@@ -49,7 +51,7 @@ export default function HeroSection() {
         <CountdownTimer targetDate={SITE_CONFIG.eventDate} />
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <Button href="/donate" size="lg" magnetic glow className="bg-gradient-to-r from-pink to-pink-light hover:shadow-glow-pink">Donate Now</Button>
-          <Button href="/lineup" variant="secondary" size="lg" className="border-white/30 text-white hover:bg-white/10 hover:text-white">View Lineup</Button>
+          <Button href="/schedule" variant="secondary" size="lg" className="border-white/30 text-white hover:bg-white/10 hover:text-white">View Schedule</Button>
         </div>
       </div>
 

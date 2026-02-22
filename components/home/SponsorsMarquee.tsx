@@ -2,6 +2,7 @@ import { sponsors } from '@/data/sponsors';
 import SectionHeading from '@/components/ui/SectionHeading';
 import Marquee from '@/components/ui/Marquee';
 import Button from '@/components/ui/Button';
+import { assetPath } from '@/lib/utils';
 
 export default function SponsorsMarquee() {
   return (
@@ -12,8 +13,8 @@ export default function SponsorsMarquee() {
       <Marquee className="mt-12" pauseOnHover>
         {sponsors.map((sponsor) => (
           <a key={sponsor.id} href={sponsor.website} target="_blank" rel="noopener noreferrer" className="mx-8 flex-shrink-0 group">
-            <div className="w-40 h-20 rounded-xl bg-lake-50 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 group-hover:shadow-soft">
-              <span className="font-display font-bold text-lake-950/40 group-hover:text-lake-950 transition-colors">{sponsor.name}</span>
+            <div className="w-40 h-20 rounded-xl bg-lake-50 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 group-hover:shadow-soft p-3">
+              <img src={assetPath(sponsor.logo)} alt={sponsor.name} className="max-w-full max-h-full object-contain" />
             </div>
           </a>
         ))}

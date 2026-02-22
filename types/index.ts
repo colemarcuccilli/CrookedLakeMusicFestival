@@ -78,12 +78,21 @@ export interface FundAllocation {
 
 export interface GalleryImage {
   id: string;
+  type: 'image';
   src: string;
   alt: string;
-  year: number;
   width: number;
   height: number;
 }
+
+export interface GalleryVideo {
+  id: string;
+  type: 'video';
+  videoId: string;
+  alt: string;
+}
+
+export type GalleryItem = GalleryImage | GalleryVideo;
 
 export interface NavLink {
   label: string;

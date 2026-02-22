@@ -9,10 +9,10 @@ export default function HomePage() {
   return (
     <>
       <HeroSection />
-      <LineupPreview />
       <VideoSection />
-      <VenuePreview />
       <SponsorsMarquee />
+      <LineupPreview />
+      <VenuePreview />
       <NewsletterSignup />
     </>
   );

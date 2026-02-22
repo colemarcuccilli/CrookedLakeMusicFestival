@@ -6,6 +6,8 @@ import SectionHeading from '@/components/ui/SectionHeading';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
+import Turnstile from '@/components/ui/Turnstile';
+import TikTokIcon from '@/components/icons/TikTokIcon';
 import { SITE_CONFIG } from '@/lib/constants';
 
 const subjects = ['General Inquiry', 'Sponsorship', 'Volunteering', 'Press / Media', 'Vendor Application', 'Other'];
@@ -13,16 +15,18 @@ const subjects = ['General Inquiry', 'Sponsorship', 'Volunteering', 'Press / Med
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!turnstileToken) return;
     setLoading(true);
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
     try {
-      const GOOGLE_SCRIPT_URL = '';
+      const GOOGLE_SCRIPT_URL = SITE_CONFIG.googleSheetsUrl;
       if (GOOGLE_SCRIPT_URL) {
-        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, type: 'contact', timestamp: new Date().toISOString() }) });
+        await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...data, turnstileToken, type: 'contact', timestamp: new Date().toISOString() }) });
       }
       setSubmitted(true);
     } catch { alert('Something went wrong. Please try again.'); }
@@ -51,6 +55,7 @@ export default function ContactPage() {
                 <div className="flex gap-3">
                   <a href={SITE_CONFIG.social.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-lake/10 hover:bg-lake hover:text-white flex items-center justify-center transition-all text-lake"><Facebook size={18} /></a>
                   <a href={SITE_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-lake/10 hover:bg-lake hover:text-white flex items-center justify-center transition-all text-lake"><Instagram size={18} /></a>
+                  <a href={SITE_CONFIG.social.tiktok} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-lake/10 hover:bg-lake hover:text-white flex items-center justify-center transition-all text-lake"><TikTokIcon size={18} /></a>
                 </div>
               </div>
             </ScrollReveal>
@@ -79,7 +84,8 @@ export default function ContactPage() {
                     <label htmlFor="message" className="block text-sm font-semibold text-lake-950">Message</label>
                     <textarea name="message" id="message" rows={6} required placeholder="How can we help?" className="w-full px-4 py-3 rounded-xl border-2 border-lake-100 bg-white text-lake-950 placeholder:text-sand-800/40 focus:outline-none focus:border-lake focus:ring-2 focus:ring-lake/20 transition-all resize-none" />
                   </div>
-                  <Button type="submit" size="lg" className="w-full justify-center" loading={loading}>Send Message</Button>
+                  <Turnstile onVerify={setTurnstileToken} />
+                  <Button type="submit" size="lg" className="w-full justify-center" loading={loading} disabled={!turnstileToken}>Send Message</Button>
                 </form>
               )}
             </ScrollReveal>
