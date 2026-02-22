@@ -46,6 +46,9 @@ export default function Footer() {
           <p className="text-white/40 text-sm">&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</p>
           <p className="text-white/40 text-sm">All proceeds donated to charity.</p>
         </div>
+        <div className="mt-4 text-center">
+          <a href="https://sweetdreams.us/" target="_blank" rel="noopener noreferrer" className="text-white/25 hover:text-white/40 text-xs transition-colors">Website built by Sweet Dreams</a>
+        </div>
       </div>
     </footer>
   );
